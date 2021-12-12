@@ -16,7 +16,7 @@ class StandardBeerPage extends StatefulWidget {
 }
 
 class _StandardBeerPageState extends State<StandardBeerPage> {
-  _StandardBeerPageState() {}
+  _StandardBeerPageState();
 
   final _formKey = GlobalKey<FormState>();
   double chosenVolume = volumes[0].volume;

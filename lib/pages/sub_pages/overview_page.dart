@@ -1,11 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class OverviewPage extends StatelessWidget {
+class OverviewPage extends StatefulWidget {
   OverviewPage({@required this.counter, Key key, this.title}) : super(key: key);
-
   final String title;
   final ValueListenable<int> counter;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _OverviewPageState(counter: this.counter);
+  }
+}
+
+class _OverviewPageState extends State<OverviewPage> {
+  ValueListenable<int> counter;
+
+  _OverviewPageState({this.counter});
 
   @override
   Widget build(BuildContext context) {

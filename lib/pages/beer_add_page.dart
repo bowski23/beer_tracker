@@ -30,10 +30,13 @@ class AddBeerPageState extends State<AddBeerPage> {
   String brand;
   String note;
   List<String> beerBrands;
+  TextEditingController brandTextController;
 
   final _formKey = GlobalKey<FormState>();
 
-  AddBeerPageState();
+  AddBeerPageState() {
+    brandTextController = TextEditingController();
+  }
 
   List<DropdownMenuItem<double>> getBeerVolumes(BuildContext context) {
     List<DropdownMenuItem<double>> items = [];
@@ -79,7 +82,7 @@ class AddBeerPageState extends State<AddBeerPage> {
           note: this.note,
           date: DateTime.now()));
       getBeerBrands();
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     }
   }
 
@@ -87,9 +90,20 @@ class AddBeerPageState extends State<AddBeerPage> {
     if (beerBrands == null) {
       await getBeerBrands();
     }
-    final foundBrands = beerBrands
-        .where((str) => str.toLowerCase().contains(pattern.toLowerCase()));
-    return foundBrands.toList();
+    RegExp pat = RegExp(pattern, caseSensitive: false);
+    List<String> foundBrands = beerBrands.where((str) => str.contains(pat));
+    // foundBrands.sort((a, b) {
+    //   bool aStart = a.startsWith(pat);
+    //   bool bStart = b.startsWith(pat);
+
+    //   if (aStart == bStart) return a.compareTo(b);
+    //   if (aStart) {
+    //     return 1;
+    //   } else {
+    //     return -1;
+    //   }
+    // });
+    return foundBrands;
   }
 
   Widget buildSuggestion(BuildContext context, String suggestion) {
@@ -113,8 +127,10 @@ class AddBeerPageState extends State<AddBeerPage> {
                     itemBuilder: buildSuggestion,
                     onSuggestionSelected: (suggestion) {
                       this.brand = suggestion;
+                      this.brandTextController.text = suggestion;
                     },
                     textFieldConfiguration: TextFieldConfiguration(
+                        controller: brandTextController,
                         decoration: const InputDecoration(
                             icon: Icon(Icons.local_drink_rounded),
                             labelText: 'Marke'),

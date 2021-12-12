@@ -43,9 +43,18 @@ class _MainPageState extends State<MainPage> {
       topBeers.add(Text(
           '${f.format(entry.date.toLocal())} - ${entry.brand} ${entry.volume}l'));
     }
+    await _refreshCount(storage: storage);
     setState(() {
       _topBeers.value = topBeers;
     });
+  }
+
+  Future<void> _refreshCount({EntryStorage storage}) async {
+    if (storage == null) {
+      storage = EntryStorage.get();
+    }
+    int entryCount = await storage.countEntries();
+    _counter.value = entryCount;
   }
 
   void _addBeer() async {
@@ -57,8 +66,6 @@ class _MainPageState extends State<MainPage> {
         date: DateTime.now(),
         form: standard.form,
         volume: standard.volume));
-    int entries = await storage.countEntries();
-    _counter.value = entries;
     _updateTopBeers();
   }
 
