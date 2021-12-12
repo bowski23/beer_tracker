@@ -90,19 +90,20 @@ class AddBeerPageState extends State<AddBeerPage> {
     if (beerBrands == null) {
       await getBeerBrands();
     }
-    RegExp pat = RegExp(pattern, caseSensitive: false);
-    List<String> foundBrands = beerBrands.where((str) => str.contains(pat));
-    // foundBrands.sort((a, b) {
-    //   bool aStart = a.startsWith(pat);
-    //   bool bStart = b.startsWith(pat);
+    RegExp pat = RegExp(pattern, caseSensitive: false, unicode: true);
+    List<String> foundBrands =
+        beerBrands.where((str) => str.contains(pat)).toList();
+    foundBrands.sort((a, b) {
+      bool aStart = a.startsWith(pat);
+      bool bStart = b.startsWith(pat);
 
-    //   if (aStart == bStart) return a.compareTo(b);
-    //   if (aStart) {
-    //     return 1;
-    //   } else {
-    //     return -1;
-    //   }
-    // });
+      if (aStart == bStart) return a.compareTo(b);
+      if (aStart) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
     return foundBrands;
   }
 
