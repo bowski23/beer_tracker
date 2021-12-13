@@ -12,7 +12,7 @@ class BeerButton extends StatelessWidget {
     return new RawMaterialButton(
       onPressed: onPressed,
       onLongPress: onLongPress,
-      fillColor: Colors.deepOrange,
+      fillColor: Theme.of(context).appBarTheme.backgroundColor,
       splashColor: Colors.amber,
       shape: CircleBorder(),
       child: Image.asset('assets/beerAdd.png', height: 128),

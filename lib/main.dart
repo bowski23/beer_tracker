@@ -15,8 +15,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = ThemeData(
-        primarySwatch: Colors.amber,
-        primaryColor: Colors.orange,
+        primarySwatch: Colors.orange,
+        colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.orange, brightness: Brightness.dark),
+        appBarTheme: AppBarTheme(backgroundColor: Colors.orange.shade800),
         brightness: Brightness.dark,
         popupMenuTheme: PopupMenuThemeData(color: Color(0xEE444444)));
 

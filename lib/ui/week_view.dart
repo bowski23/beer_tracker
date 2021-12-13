@@ -10,16 +10,18 @@ class _WeekView extends StatelessWidget {
       BarChartData(
         barTouchData: barTouchData,
         titlesData: titlesData,
-        borderData: borderData,
+        borderData: FlBorderData(show: false),
+        gridData: FlGridData(
+          show: false,
+        ),
         barGroups: barGroups,
-        alignment: BarChartAlignment.spaceAround,
-        maxY: 20,
+        alignment: BarChartAlignment.spaceEvenly,
       ),
     );
   }
 
   BarTouchData get barTouchData => BarTouchData(
-        enabled: false,
+        enabled: true,
         touchTooltipData: BarTouchTooltipData(
           tooltipBgColor: Colors.transparent,
           tooltipPadding: const EdgeInsets.all(0),
@@ -43,42 +45,33 @@ class _WeekView extends StatelessWidget {
 
   FlTitlesData get titlesData => FlTitlesData(
         show: true,
-        bottomTitles: SideTitles(
+        bottomTitles: SideTitles(showTitles: false),
+        leftTitles: SideTitles(showTitles: false),
+        topTitles: SideTitles(
           showTitles: true,
-          getTextStyles: (context, value) => const TextStyle(
-            color: Color(0xff7589a2),
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
-          margin: 20,
+          reservedSize: 50,
           getTitles: (double value) {
             switch (value.toInt()) {
               case 0:
-                return 'Mn';
+                return 'Mo';
               case 1:
-                return 'Te';
+                return 'Di';
               case 2:
-                return 'Wd';
+                return 'Mi';
               case 3:
-                return 'Tu';
+                return 'Do';
               case 4:
                 return 'Fr';
               case 5:
-                return 'St';
+                return 'Sa';
               case 6:
-                return 'Sn';
+                return 'So';
               default:
                 return '';
             }
           },
         ),
-        leftTitles: SideTitles(showTitles: false),
-        topTitles: SideTitles(showTitles: false),
         rightTitles: SideTitles(showTitles: false),
-      );
-
-  FlBorderData get borderData => FlBorderData(
-        show: false,
       );
 
   List<BarChartGroupData> get barGroups => [
@@ -86,7 +79,8 @@ class _WeekView extends StatelessWidget {
           x: 0,
           barRods: [
             BarChartRodData(
-                y: 8, colors: [Colors.lightBlueAccent, Colors.greenAccent])
+              y: 8,
+            )
           ],
           showingTooltipIndicators: [0],
         ),
@@ -107,7 +101,7 @@ class _WeekView extends StatelessWidget {
           showingTooltipIndicators: [0],
         ),
         BarChartGroupData(
-          x: 3,
+          x: 4,
           barRods: [
             BarChartRodData(
                 y: 15, colors: [Colors.lightBlueAccent, Colors.greenAccent])
@@ -115,15 +109,16 @@ class _WeekView extends StatelessWidget {
           showingTooltipIndicators: [0],
         ),
         BarChartGroupData(
-          x: 3,
+          x: 5,
           barRods: [
             BarChartRodData(
-                y: 13, colors: [Colors.lightBlueAccent, Colors.greenAccent])
+              y: 13,
+            )
           ],
           showingTooltipIndicators: [0],
         ),
         BarChartGroupData(
-          x: 3,
+          x: 6,
           barRods: [
             BarChartRodData(
                 y: 10, colors: [Colors.lightBlueAccent, Colors.greenAccent])
@@ -148,6 +143,7 @@ class WeekViewChartState extends State<WeekViewChart> {
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        margin: EdgeInsets.fromLTRB(2, 10, 2, 5),
         color: Theme.of(context).primaryColor,
         child: const _WeekView(),
       ),
