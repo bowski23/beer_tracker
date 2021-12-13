@@ -34,7 +34,8 @@ class _MainPageState extends State<MainPage> {
     _updateTopBeers();
   }
 
-  void _updateTopBeers({int count = 100}) async {
+// 200 beers should cover a week easily.(thats almost 30 beers a day for a whole week)
+  void _updateTopBeers({int count = 200}) async {
     var storage = EntryStorage.get();
     var entries = await storage.getEntries(count: count);
     List<Text> topBeers = [];
