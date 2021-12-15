@@ -87,24 +87,21 @@ class _WeekView extends StatelessWidget {
         BarChartGroupData(
           x: 1,
           barRods: [
-            BarChartRodData(
-                y: 10, colors: [Colors.lightBlueAccent, Colors.greenAccent])
+            BarChartRodData(y: 10, colors: [Colors.lightBlueAccent, Colors.greenAccent])
           ],
           showingTooltipIndicators: [0],
         ),
         BarChartGroupData(
           x: 2,
           barRods: [
-            BarChartRodData(
-                y: 14, colors: [Colors.lightBlueAccent, Colors.greenAccent])
+            BarChartRodData(y: 14, colors: [Colors.lightBlueAccent, Colors.greenAccent])
           ],
           showingTooltipIndicators: [0],
         ),
         BarChartGroupData(
           x: 4,
           barRods: [
-            BarChartRodData(
-                y: 15, colors: [Colors.lightBlueAccent, Colors.greenAccent])
+            BarChartRodData(y: 15, colors: [Colors.lightBlueAccent, Colors.greenAccent])
           ],
           showingTooltipIndicators: [0],
         ),
@@ -120,8 +117,7 @@ class _WeekView extends StatelessWidget {
         BarChartGroupData(
           x: 6,
           barRods: [
-            BarChartRodData(
-                y: 10, colors: [Colors.lightBlueAccent, Colors.greenAccent])
+            BarChartRodData(y: 10, colors: [Colors.lightBlueAccent, Colors.greenAccent])
           ],
           showingTooltipIndicators: [0],
         ),
