@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../ui/week_view.dart';
-import '../../ui/week_view_google.dart';
 
 class OverviewPage extends StatefulWidget {
-  OverviewPage({@required this.counter, Key key, this.title}) : super(key: key);
+  OverviewPage({required this.counter, Key? key, this.title = ''}) : super(key: key);
   final String title;
   final ValueListenable<int> counter;
 
@@ -17,7 +16,7 @@ class OverviewPage extends StatefulWidget {
 class _OverviewPageState extends State<OverviewPage> {
   ValueListenable<int> counter;
 
-  _OverviewPageState({this.counter});
+  _OverviewPageState({required this.counter});
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +39,9 @@ class _OverviewPageState extends State<OverviewPage> {
     ];
 
     //add weekView
-    var weekView = WeekViewChart();
-    children.add(weekView);
 
-    var weekViewGoogle =
-        WeekViewGoogle(title: 'Bier', subtitle: "in der Woche");
-    children.add(weekViewGoogle);
+    var weekView = WeekView(title: 'Bier', subtitle: "in der Woche");
+    children.add(weekView);
 
     return Container(
       alignment: Alignment.topCenter,

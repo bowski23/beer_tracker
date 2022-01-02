@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../../entry_storage.dart';
 
 class StandardBeerPage extends StatefulWidget {
-  StandardBeerPage({Key key, this.title}) : super(key: key);
+  StandardBeerPage({Key? key, this.title = ''}) : super(key: key);
 
   final String title;
 
@@ -21,7 +21,7 @@ class _StandardBeerPageState extends State<StandardBeerPage> {
   final _formKey = GlobalKey<FormState>();
   double chosenVolume = volumes[0].volume;
   String chosenDrinkForm = consumptionForms.first;
-  String brand;
+  String brand = '';
 
   List<DropdownMenuItem<double>> getBeerVolumes(BuildContext context) {
     List<DropdownMenuItem<double>> items = [];
@@ -33,9 +33,7 @@ class _StandardBeerPageState extends State<StandardBeerPage> {
       } else {
         text = "${volume.volume}l";
       }
-      items.add(DropdownMenuItem<double>(
-          child: Text(text, textAlign: TextAlign.center),
-          value: volume.volume));
+      items.add(DropdownMenuItem<double>(child: Text(text, textAlign: TextAlign.center), value: volume.volume));
     }
 
     return items;
@@ -46,15 +44,14 @@ class _StandardBeerPageState extends State<StandardBeerPage> {
 
     for (var form in consumptionForms) {
       String text = form;
-      items.add(DropdownMenuItem<String>(
-          child: Text(text, textAlign: TextAlign.center), value: text));
+      items.add(DropdownMenuItem<String>(child: Text(text, textAlign: TextAlign.center), value: text));
     }
 
     return items;
   }
 
   void saveStandardBeer() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       final db = EntryStorage.get();
       db.setStandardEntry(StandardBeerEntry(
           brand: this.brand,
@@ -74,9 +71,7 @@ class _StandardBeerPageState extends State<StandardBeerPage> {
               key: _formKey,
               child: Column(children: [
                 TextFormField(
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.local_drink_rounded),
-                      labelText: 'Marke'),
+                  decoration: const InputDecoration(icon: Icon(Icons.local_drink_rounded), labelText: 'Marke'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Gib die Marke ein, du كلب.';
@@ -93,8 +88,8 @@ class _StandardBeerPageState extends State<StandardBeerPage> {
                   dropdownColor: Theme.of(context).popupMenuTheme.color,
                   decoration: const InputDecoration(labelText: 'Volumen'),
                   items: getBeerVolumes(context),
-                  onChanged: (double value) {
-                    this.chosenVolume = value;
+                  onChanged: (double? value) {
+                    if (value != null) this.chosenVolume = value;
                   },
                 ),
                 DropdownButtonFormField<String>(
@@ -103,8 +98,8 @@ class _StandardBeerPageState extends State<StandardBeerPage> {
                   dropdownColor: Theme.of(context).popupMenuTheme.color,
                   items: getBeerConsumptionForms(context),
                   decoration: const InputDecoration(labelText: 'Form'),
-                  onChanged: (String value) {
-                    this.chosenDrinkForm = value;
+                  onChanged: (String? value) {
+                    if (value != null) this.chosenDrinkForm = value;
                   },
                 ),
               ]),

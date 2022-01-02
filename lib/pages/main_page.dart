@@ -10,7 +10,7 @@ import 'sub_pages/overview_page.dart';
 import 'sub_pages/standard_beer_page.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage({Key key, this.title}) : super(key: key);
+  MainPage({Key? key, this.title = ''}) : super(key: key);
 
   final String title;
 
@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
   ValueNotifier<int> _counter = ValueNotifier(0);
   int _navIndex = 0;
   ValueNotifier<List<Text>> _topBeers = ValueNotifier([]);
-  Widget shownPage;
+  Widget shownPage = Container();
 
   _MainPageState() {
     shownPage = OverviewPage(counter: _counter);
@@ -41,8 +41,7 @@ class _MainPageState extends State<MainPage> {
     List<Text> topBeers = [];
     final f = new DateFormat('dd.MM.yyyy H:mm');
     for (var entry in entries) {
-      topBeers.add(Text(
-          '${f.format(entry.date.toLocal())} - ${entry.brand} ${entry.volume}l'));
+      topBeers.add(Text('${f.format(entry.date.toLocal())} - ${entry.brand} ${entry.volume}l'));
     }
     await _refreshCount(storage: storage);
     setState(() {
@@ -50,7 +49,7 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-  Future<void> _refreshCount({EntryStorage storage}) async {
+  Future<void> _refreshCount({EntryStorage? storage}) async {
     if (storage == null) {
       storage = EntryStorage.get();
     }
@@ -62,11 +61,8 @@ class _MainPageState extends State<MainPage> {
     var storage = EntryStorage.get();
 
     final standard = await storage.getStandardEntry();
-    await storage.saveEntry(BeerEntry(
-        brand: standard.brand,
-        date: DateTime.now(),
-        form: standard.form,
-        volume: standard.volume));
+    await storage.saveEntry(
+        BeerEntry(brand: standard.brand, date: DateTime.now(), form: standard.form, volume: standard.volume));
     _updateTopBeers();
   }
 
@@ -94,10 +90,8 @@ class _MainPageState extends State<MainPage> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home_rounded), label: "Übersicht"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today), label: "Standardbier"),
+            BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: "Übersicht"),
+            BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: "Standardbier"),
             BottomNavigationBarItem(icon: Icon(Icons.archive), label: "Archiv"),
           ],
           onTap: _navigate,

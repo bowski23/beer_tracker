@@ -2,10 +2,10 @@ import "package:flutter/foundation.dart";
 import 'package:flutter/material.dart';
 
 class BeerButton extends StatelessWidget {
-  BeerButton({@required this.onPressed, this.onLongPress});
+  BeerButton({required this.onPressed, this.onLongPress});
 
   final GestureTapCallback onPressed;
-  final GestureLongPressCallback onLongPress;
+  final GestureLongPressCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) {
