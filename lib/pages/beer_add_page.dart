@@ -7,7 +7,7 @@ import '../models/beer_consumptionForms.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class AddBeerPage extends StatefulWidget {
-  AddBeerPage({Key key, this.title}) : super(key: key);
+  AddBeerPage({Key? key, this.title = ''}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -27,16 +27,13 @@ class AddBeerPage extends StatefulWidget {
 class AddBeerPageState extends State<AddBeerPage> {
   double chosenVolume = volumes[0].volume;
   String chosenDrinkForm = consumptionForms.first;
-  String brand;
-  String note;
-  List<String> beerBrands;
-  TextEditingController brandTextController;
-
+  String brand = '';
+  String note = '';
+  List<String> beerBrands = [];
+  TextEditingController brandTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  AddBeerPageState() {
-    brandTextController = TextEditingController();
-  }
+  AddBeerPageState();
 
   List<DropdownMenuItem<double>> getBeerVolumes(BuildContext context) {
     List<DropdownMenuItem<double>> items = [];
@@ -48,9 +45,7 @@ class AddBeerPageState extends State<AddBeerPage> {
       } else {
         text = "${volume.volume}l";
       }
-      items.add(DropdownMenuItem<double>(
-          child: Text(text, textAlign: TextAlign.center),
-          value: volume.volume));
+      items.add(DropdownMenuItem<double>(child: Text(text, textAlign: TextAlign.center), value: volume.volume));
     }
 
     return items;
@@ -61,8 +56,7 @@ class AddBeerPageState extends State<AddBeerPage> {
 
     for (var form in consumptionForms) {
       String text = form;
-      items.add(DropdownMenuItem<String>(
-          child: Text(text, textAlign: TextAlign.center), value: text));
+      items.add(DropdownMenuItem<String>(child: Text(text, textAlign: TextAlign.center), value: text));
     }
 
     return items;
@@ -73,7 +67,7 @@ class AddBeerPageState extends State<AddBeerPage> {
   }
 
   void addBeer(BuildContext context) async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       final db = EntryStorage.get();
       db.saveEntry(BeerEntry(
           brand: this.brand,
@@ -91,8 +85,7 @@ class AddBeerPageState extends State<AddBeerPage> {
       await getBeerBrands();
     }
     RegExp pat = RegExp(pattern, caseSensitive: false, unicode: true);
-    List<String> foundBrands =
-        beerBrands.where((str) => str.contains(pat)).toList();
+    List<String> foundBrands = beerBrands.where((str) => str.contains(pat)).toList();
     foundBrands.sort((a, b) {
       bool aStart = a.startsWith(pat);
       bool bStart = b.startsWith(pat);
@@ -127,29 +120,28 @@ class AddBeerPageState extends State<AddBeerPage> {
                     suggestionsCallback: suggestBrand,
                     itemBuilder: buildSuggestion,
                     onSuggestionSelected: (suggestion) {
-                      this.brand = suggestion;
-                      this.brandTextController.text = suggestion;
+                      if (suggestion != null) {
+                        this.brand = suggestion.toString();
+                        this.brandTextController.text = suggestion.toString();
+                      }
                     },
                     textFieldConfiguration: TextFieldConfiguration(
                         controller: brandTextController,
-                        decoration: const InputDecoration(
-                            icon: Icon(Icons.local_drink_rounded),
-                            labelText: 'Marke'),
+                        decoration: const InputDecoration(icon: Icon(Icons.local_drink_rounded), labelText: 'Marke'),
                         onChanged: (value) {
                           this.brand = value;
                         }),
                     getImmediateSuggestions: true,
                     hideOnEmpty: true,
-                    suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                        color: Theme.of(context).popupMenuTheme.color),
+                    suggestionsBoxDecoration: SuggestionsBoxDecoration(color: Theme.of(context).popupMenuTheme.color),
                   ),
                   DropdownButtonFormField<double>(
                     elevation: 0,
                     value: chosenVolume,
                     decoration: const InputDecoration(labelText: 'Volumen'),
                     items: getBeerVolumes(context),
-                    onChanged: (double value) {
-                      this.chosenVolume = value;
+                    onChanged: (double? value) {
+                      if (value != null) this.chosenVolume = value;
                     },
                   ),
                   DropdownButtonFormField<String>(
@@ -157,13 +149,12 @@ class AddBeerPageState extends State<AddBeerPage> {
                     elevation: 0,
                     items: getBeerConsumptionForms(context),
                     decoration: const InputDecoration(labelText: 'Form'),
-                    onChanged: (String value) {
-                      this.chosenDrinkForm = value;
+                    onChanged: (String? value) {
+                      if (value != null) this.chosenDrinkForm = value;
                     },
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(
-                        icon: Icon(Icons.note_add), labelText: 'Vermerk'),
+                    decoration: const InputDecoration(icon: Icon(Icons.note_add), labelText: 'Vermerk'),
                     onChanged: (newValue) {
                       this.note = newValue;
                     },
