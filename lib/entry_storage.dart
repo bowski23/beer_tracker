@@ -11,13 +11,14 @@ import 'models/standard_beer_entry.dart';
 class EntryStorage {
   static EntryStorage? _instance;
   static bool isDbExisting = false;
-  Future<Database> database = init();
+  Future<Database>? database;
 
   EntryStorage._();
 
   static void openDb() async {
     if (EntryStorage._instance == null) {
       _instance = EntryStorage._();
+      _instance!.database = _instance!.init();
     }
   }
 
@@ -33,7 +34,7 @@ class EntryStorage {
     return _instance!;
   }
 
-  static Future<Database> init() async {
+  Future<Database> init() async {
     return openDatabase(
       join(await getDatabasesPath(), 'beer_entries.db'),
       onCreate: (db, version) async {
@@ -48,20 +49,20 @@ class EntryStorage {
   }
 
   Future<void> saveEntry(BeerEntry entry) async {
-    final Database db = await database;
+    final Database db = await database!;
 
     await db.insert('beerEntry', entry.toMap(), conflictAlgorithm: ConflictAlgorithm.fail);
   }
 
   Future<BeerEntry> getEntry(String id) async {
-    final Database db = await database;
+    final Database db = await database!;
 
     final List<Map<String, dynamic>> list = await db.query('beerEntry', where: 'id = ?', whereArgs: [id]);
     return BeerEntry.fromMap(list.first);
   }
 
   Future<StandardBeerEntry> getStandardEntry() async {
-    final Database db = await database;
+    final Database db = await database!;
     final date = DateTime.now();
     final List<Map<String, dynamic>> list = await db.query('standardEntry',
         where: 'validUntil > ?', whereArgs: [date.millisecondsSinceEpoch], orderBy: "validUntil", limit: 1);
@@ -69,7 +70,7 @@ class EntryStorage {
   }
 
   Future<void> cleanStandardEntries() async {
-    final Database db = await database;
+    final Database db = await database!;
     final date = DateTime.now();
     await db.delete(
       'standardEntry',
@@ -79,13 +80,13 @@ class EntryStorage {
   }
 
   Future<void> setStandardEntry(StandardBeerEntry entry) async {
-    final Database db = await database;
+    final Database db = await database!;
     await db.insert('standardEntry', entry.toMap());
     return;
   }
 
   Future<List<String>> getBeerBrands() async {
-    final Database db = await database;
+    final Database db = await database!;
 
     final List<Map<String, dynamic>> brandsMap =
         await db.query('beerEntry', groupBy: 'brand', orderBy: 'MAX(date) DESC', columns: ['brand']);
@@ -94,34 +95,29 @@ class EntryStorage {
   }
 
   Future<List<BeerEntry>> getEntries({DateTime? from, DateTime? to, String? brand, int count = -1}) async {
-    final Database db = await database;
+    final Database db = await database!;
 
-    String whereStr = '';
+    String? whereStr;
     List whereArgs = [];
 
-    bool hasPriorConditions = false;
-
     if (from != null) {
-      whereStr += "date > ?";
+      whereStr = "date > ?";
       whereArgs.add(from);
-      hasPriorConditions = true;
     }
     if (to != null) {
-      if (hasPriorConditions)
+      if (whereStr != null)
         whereStr += " AND ";
       else {
         whereStr = '';
-        hasPriorConditions = true;
       }
       whereStr += "date < ?";
       whereArgs.add(to);
     }
     if (brand != null && brand.isNotEmpty) {
-      if (hasPriorConditions)
+      if (whereStr != null)
         whereStr += " AND ";
       else {
         whereStr = '';
-        hasPriorConditions = true;
       }
       whereStr += "brand = ?";
       whereArgs.add(brand);
@@ -140,14 +136,44 @@ class EntryStorage {
   //   return this.init();
   // }
 
+//this may have to be changed to calculate the week in localtime
   Future<int> countEntries({DateTimeRange? dateRange}) async {
-    final Database db = await database;
+    final Database db = await database!;
 
     String query = 'SELECT COUNT(*) FROM beerEntry';
 
-    if (dateRange != null) {}
+    if (dateRange != null) {
+      DateTime start = dateRange.start;
+      DateTime end = dateRange.end;
+      query += 'WHERE date > $start AND date < $end)';
+    }
 
     int? result = Sqflite.firstIntValue(await db.rawQuery(query));
-    return result == null ? 0 : result;
+    return result != null ? result : 0;
+  }
+
+  Future<List<int>> countEntriesByDay() async {
+    final Database db = await database!;
+
+    String query = '''SELECT COUNT(date) as amount, strftime(\'%w\',date([date]/1000,\'unixepoch\')) as day
+FROM beerEntry 
+WHERE strftime(\'%W\',date())  = strftime(\'%W\',date([date]/1000,\'unixepoch\')) 
+GROUP BY strftime(\'%w\',date([date]/1000,\'unixepoch\'))''';
+    var a = (await db.rawQuery(query));
+    List<int> dateCounts = [0, 0, 0, 0, 0, 0, 0];
+    for (var b in a) {
+      int day = int.parse(b['day'] as String);
+      //convert to 0 = monday
+      day = day - 1 % 7;
+      dateCounts[day] += b['amount'] as int;
+    }
+    return dateCounts;
   }
 }
+
+/*
+SELECT COUNT(date) as amount, strftime('%w',date([date],'unixepoch')) as day
+FROM beerEntry 
+WHERE strftime('%W',date())  = strftime('%W',date([date],'unixepoch')) 
+GROUP BY strftime('%w',date([date],'unixepoch'))
+*/

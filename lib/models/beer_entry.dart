@@ -6,9 +6,9 @@ class BeerEntry {
   final String brand;
   final DateTime date;
   final double volume;
-  final String form;
+  final String? form;
   final bool hasImage;
-  final String note;
+  final String? note;
 
   BeerEntry(
       {this.id,

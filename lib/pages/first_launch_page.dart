@@ -87,8 +87,8 @@ class _FirstLaunchPageState extends State<FirstLaunchPage> {
                 value: chosenVolume,
                 decoration: const InputDecoration(labelText: 'Volumen'),
                 items: getBeerVolumes(context),
-                onChanged: (double value) {
-                  this.chosenVolume = value;
+                onChanged: (double? value) {
+                  this.chosenVolume = value ?? this.chosenVolume;
                 },
               ),
               DropdownButtonFormField<String>(
@@ -96,8 +96,8 @@ class _FirstLaunchPageState extends State<FirstLaunchPage> {
                 elevation: 0,
                 items: getBeerConsumptionForms(context),
                 decoration: const InputDecoration(labelText: 'Form'),
-                onChanged: (String value) {
-                  this.chosenDrinkForm = value;
+                onChanged: (String? value) {
+                  this.chosenDrinkForm = value ?? this.chosenDrinkForm;
                 },
               ),
             ]),
