@@ -1,10 +1,13 @@
 import 'package:beer_tracker/entry_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../ui/beer_button.dart';
 import '../models/beer_volumes.dart';
 import '../models/beer_entry.dart';
 import '../models/beer_consumptionForms.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class AddBeerPage extends StatefulWidget {
   AddBeerPage({Key? key, this.title = ''}) : super(key: key);
@@ -30,6 +33,7 @@ class AddBeerPageState extends State<AddBeerPage> {
   String brand = '';
   String note = '';
   List<String> beerBrands = [];
+  DateTime? chosenDate;
   TextEditingController brandTextController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -74,7 +78,7 @@ class AddBeerPageState extends State<AddBeerPage> {
           volume: this.chosenVolume,
           form: this.chosenDrinkForm,
           note: this.note,
-          date: DateTime.now()));
+          date: chosenDate == null ? DateTime.now() : chosenDate!));
       getBeerBrands();
       Navigator.pop(context, true);
     }
@@ -106,6 +110,67 @@ class AddBeerPageState extends State<AddBeerPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> forms = [
+      TypeAheadField(
+        suggestionsCallback: suggestBrand,
+        itemBuilder: buildSuggestion,
+        onSuggestionSelected: (suggestion) {
+          if (suggestion != null) {
+            this.brand = suggestion.toString();
+            this.brandTextController.text = suggestion.toString();
+          }
+        },
+        textFieldConfiguration: TextFieldConfiguration(
+            controller: brandTextController,
+            decoration: const InputDecoration(icon: Icon(Icons.local_drink_rounded), labelText: 'Marke'),
+            onChanged: (value) {
+              this.brand = value;
+            }),
+        getImmediateSuggestions: true,
+        hideOnEmpty: true,
+        suggestionsBoxDecoration: SuggestionsBoxDecoration(color: Theme.of(context).popupMenuTheme.color),
+      ),
+      DropdownButtonFormField<double>(
+        elevation: 0,
+        value: chosenVolume,
+        decoration: const InputDecoration(labelText: 'Volumen'),
+        items: getBeerVolumes(context),
+        onChanged: (double? value) {
+          if (value != null) this.chosenVolume = value;
+        },
+      ),
+      DropdownButtonFormField<String>(
+        value: chosenDrinkForm,
+        elevation: 0,
+        items: getBeerConsumptionForms(context),
+        decoration: const InputDecoration(labelText: 'Form'),
+        onChanged: (String? value) {
+          if (value != null) this.chosenDrinkForm = value;
+        },
+      ),
+      TextFormField(
+        decoration: const InputDecoration(icon: Icon(Icons.note_add), labelText: 'Vermerk'),
+        onChanged: (newValue) {
+          this.note = newValue;
+        },
+      )
+    ];
+
+    if (kDebugMode) {
+      forms.add(DateTimeField(
+        format: DateFormat.yMMMMd(),
+        onShowPicker: (context, currentValue) async {
+          var time = await showDatePicker(
+              context: context,
+              initialDate: currentValue ?? DateTime.now(),
+              firstDate: DateTime(2000),
+              lastDate: DateTime.now().add(Duration(days: 30)));
+          chosenDate = time;
+          return time;
+        },
+      ));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bier Details'),
@@ -115,51 +180,7 @@ class AddBeerPageState extends State<AddBeerPage> {
               padding: EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
-                child: Column(children: [
-                  TypeAheadField(
-                    suggestionsCallback: suggestBrand,
-                    itemBuilder: buildSuggestion,
-                    onSuggestionSelected: (suggestion) {
-                      if (suggestion != null) {
-                        this.brand = suggestion.toString();
-                        this.brandTextController.text = suggestion.toString();
-                      }
-                    },
-                    textFieldConfiguration: TextFieldConfiguration(
-                        controller: brandTextController,
-                        decoration: const InputDecoration(icon: Icon(Icons.local_drink_rounded), labelText: 'Marke'),
-                        onChanged: (value) {
-                          this.brand = value;
-                        }),
-                    getImmediateSuggestions: true,
-                    hideOnEmpty: true,
-                    suggestionsBoxDecoration: SuggestionsBoxDecoration(color: Theme.of(context).popupMenuTheme.color),
-                  ),
-                  DropdownButtonFormField<double>(
-                    elevation: 0,
-                    value: chosenVolume,
-                    decoration: const InputDecoration(labelText: 'Volumen'),
-                    items: getBeerVolumes(context),
-                    onChanged: (double? value) {
-                      if (value != null) this.chosenVolume = value;
-                    },
-                  ),
-                  DropdownButtonFormField<String>(
-                    value: chosenDrinkForm,
-                    elevation: 0,
-                    items: getBeerConsumptionForms(context),
-                    decoration: const InputDecoration(labelText: 'Form'),
-                    onChanged: (String? value) {
-                      if (value != null) this.chosenDrinkForm = value;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(icon: Icon(Icons.note_add), labelText: 'Vermerk'),
-                    onChanged: (newValue) {
-                      this.note = newValue;
-                    },
-                  )
-                ]),
+                child: Column(children: forms),
               ))),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),

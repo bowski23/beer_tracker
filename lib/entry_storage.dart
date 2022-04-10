@@ -129,23 +129,22 @@ class EntryStorage {
     return List.generate(maps.length, (i) => BeerEntry.fromMap(maps[i]));
   }
 
-  // Future<void> resetDB() async {
-  //   final db = await this.database;
-  //   db.close();
-  //   await databaseFactory.deleteDatabase(join(await getDatabasesPath(), 'beer_entries.db'));
-  //   return this.init();
-  // }
+  Future<void> resetDB() async {
+    final db = await this.database!;
+    db.close();
+    await databaseFactory.deleteDatabase(join(await getDatabasesPath(), 'beer_entries.db'));
+    this.database = this.init();
+  }
 
-//this may have to be changed to calculate the week in localtime
   Future<int> countEntries({DateTimeRange? dateRange}) async {
     final Database db = await database!;
 
     String query = 'SELECT COUNT(*) FROM beerEntry';
 
     if (dateRange != null) {
-      DateTime start = dateRange.start;
-      DateTime end = dateRange.end;
-      query += 'WHERE date > $start AND date < $end)';
+      int start = dateRange.start.millisecondsSinceEpoch;
+      int end = dateRange.end.millisecondsSinceEpoch;
+      query += ' WHERE date > $start AND date < $end';
     }
 
     int? result = Sqflite.firstIntValue(await db.rawQuery(query));
@@ -155,25 +154,19 @@ class EntryStorage {
   Future<List<int>> countEntriesByDay() async {
     final Database db = await database!;
 
-    String query = '''SELECT COUNT(date) as amount, strftime(\'%w\',date([date]/1000,\'unixepoch\')) as day
+    String query =
+        '''SELECT COUNT(date) as amount, strftime(\'%w\',date([date]/1000,\'unixepoch\',\'localtime\')) as day
 FROM beerEntry 
-WHERE strftime(\'%W\',date())  = strftime(\'%W\',date([date]/1000,\'unixepoch\')) 
-GROUP BY strftime(\'%w\',date([date]/1000,\'unixepoch\'))''';
+WHERE strftime(\'%W\',date(),\'localtime\')  = strftime(\'%W\',date([date]/1000,\'unixepoch\',\'localtime\')) 
+GROUP BY strftime(\'%w\',date([date]/1000,\'unixepoch\',\'localtime\'))''';
     var a = (await db.rawQuery(query));
     List<int> dateCounts = [0, 0, 0, 0, 0, 0, 0];
     for (var b in a) {
       int day = int.parse(b['day'] as String);
       //convert to 0 = monday
-      day = day - 1 % 7;
+      day = (day - 1) % 7;
       dateCounts[day] += b['amount'] as int;
     }
     return dateCounts;
   }
 }
-
-/*
-SELECT COUNT(date) as amount, strftime('%w',date([date],'unixepoch')) as day
-FROM beerEntry 
-WHERE strftime('%W',date())  = strftime('%W',date([date],'unixepoch')) 
-GROUP BY strftime('%w',date([date],'unixepoch'))
-*/

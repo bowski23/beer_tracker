@@ -9,13 +9,15 @@ class BeerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new RawMaterialButton(
-      onPressed: onPressed,
-      onLongPress: onLongPress,
-      fillColor: Theme.of(context).appBarTheme.backgroundColor,
-      splashColor: Colors.amber,
-      shape: CircleBorder(),
-      child: Image.asset('assets/beerAdd.png', height: 128),
-    );
+    return Hero(
+        tag: 'beerAdd',
+        child: new RawMaterialButton(
+          onPressed: onPressed,
+          onLongPress: onLongPress,
+          fillColor: Theme.of(context).appBarTheme.backgroundColor,
+          splashColor: Colors.amber,
+          shape: CircleBorder(),
+          child: Image.asset('assets/beerAdd.png', height: 128),
+        ));
   }
 }
