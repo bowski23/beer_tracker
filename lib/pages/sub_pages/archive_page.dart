@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ArchivePage extends StatelessWidget {
-  ArchivePage({@required this.topBeers, Key key, this.title}) : super(key: key);
+  ArchivePage({required this.topBeers, Key? key, this.title = ''}) : super(key: key);
   final ValueListenable<List<Text>> topBeers;
 
   final String title;

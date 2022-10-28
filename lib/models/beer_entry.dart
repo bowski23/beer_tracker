@@ -2,18 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 class BeerEntry {
-  final String id;
+  final String? id;
   final String brand;
   final DateTime date;
   final double volume;
-  final String form;
+  final String? form;
   final bool hasImage;
-  final String note;
+  final String? note;
 
   BeerEntry(
       {this.id,
-      @required this.brand,
-      @required this.date,
+      required this.brand,
+      required this.date,
       this.volume = 0.5,
       this.hasImage = false,
       this.note = '',
@@ -30,10 +30,10 @@ class BeerEntry {
 
   Map<String, dynamic> toMap() {
     String lId;
-    if (id == null || id.isEmpty) {
+    if (id == null || id!.isEmpty) {
       lId = Uuid().v1();
     } else {
-      lId = id;
+      lId = id!;
     }
     return {
       'id': lId,

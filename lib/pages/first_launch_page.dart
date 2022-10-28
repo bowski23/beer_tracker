@@ -5,7 +5,7 @@ import '../models/beer_volumes.dart';
 import '../models/beer_consumptionForms.dart';
 
 class FirstLaunchPage extends StatefulWidget {
-  FirstLaunchPage({Key key, this.title}) : super(key: key);
+  FirstLaunchPage({Key? key, this.title = ''}) : super(key: key);
 
   final String title;
 
@@ -17,7 +17,7 @@ class _FirstLaunchPageState extends State<FirstLaunchPage> {
   final _formKey = GlobalKey<FormState>();
   double chosenVolume = volumes[0].volume;
   String chosenDrinkForm = consumptionForms.first;
-  String brand;
+  String brand = '';
 
   List<DropdownMenuItem<double>> getBeerVolumes(BuildContext context) {
     List<DropdownMenuItem<double>> items = [];
@@ -29,9 +29,7 @@ class _FirstLaunchPageState extends State<FirstLaunchPage> {
       } else {
         text = "${volume.volume}l";
       }
-      items.add(DropdownMenuItem<double>(
-          child: Text(text, textAlign: TextAlign.center),
-          value: volume.volume));
+      items.add(DropdownMenuItem<double>(child: Text(text, textAlign: TextAlign.center), value: volume.volume));
     }
 
     return items;
@@ -42,21 +40,17 @@ class _FirstLaunchPageState extends State<FirstLaunchPage> {
 
     for (var form in consumptionForms) {
       String text = form;
-      items.add(DropdownMenuItem<String>(
-          child: Text(text, textAlign: TextAlign.center), value: text));
+      items.add(DropdownMenuItem<String>(child: Text(text, textAlign: TextAlign.center), value: text));
     }
 
     return items;
   }
 
   void saveStandardBeer() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       final db = EntryStorage.get();
       db.setStandardEntry(StandardBeerEntry(
-          brand: this.brand,
-          validUntil: DateTime.utc(2100),
-          volume: this.chosenVolume,
-          form: this.chosenDrinkForm));
+          brand: this.brand, validUntil: DateTime.utc(2100), volume: this.chosenVolume, form: this.chosenDrinkForm));
       Navigator.pushNamed(context, '/main');
     }
   }
@@ -77,8 +71,7 @@ class _FirstLaunchPageState extends State<FirstLaunchPage> {
             key: _formKey,
             child: Column(children: [
               TextFormField(
-                decoration: const InputDecoration(
-                    icon: Icon(Icons.local_drink_rounded), labelText: 'Marke'),
+                decoration: const InputDecoration(icon: Icon(Icons.local_drink_rounded), labelText: 'Marke'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Gib die Marke ein, du كلب.';
@@ -94,8 +87,8 @@ class _FirstLaunchPageState extends State<FirstLaunchPage> {
                 value: chosenVolume,
                 decoration: const InputDecoration(labelText: 'Volumen'),
                 items: getBeerVolumes(context),
-                onChanged: (double value) {
-                  this.chosenVolume = value;
+                onChanged: (double? value) {
+                  this.chosenVolume = value ?? this.chosenVolume;
                 },
               ),
               DropdownButtonFormField<String>(
@@ -103,8 +96,8 @@ class _FirstLaunchPageState extends State<FirstLaunchPage> {
                 elevation: 0,
                 items: getBeerConsumptionForms(context),
                 decoration: const InputDecoration(labelText: 'Form'),
-                onChanged: (String value) {
-                  this.chosenDrinkForm = value;
+                onChanged: (String? value) {
+                  this.chosenDrinkForm = value ?? this.chosenDrinkForm;
                 },
               ),
             ]),
