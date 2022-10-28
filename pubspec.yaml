@@ -29,8 +29,12 @@ dependencies:
   path:
   uuid:
   intl:
-  fl_chart:
+  # Keep until https://github.com/google/charts/issues/798 is resolved.
   charts_flutter:
+    git:
+      url: https://github.com/fzyzcjy/charts.git
+      ref: master
+      path: charts_flutter
   datetime_picker_formfield:
   shared_preferences:
 
