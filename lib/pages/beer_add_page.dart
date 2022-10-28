@@ -85,7 +85,7 @@ class AddBeerPageState extends State<AddBeerPage> {
   }
 
   Future<List<String>> suggestBrand(String pattern) async {
-    if (beerBrands == null) {
+    if (beerBrands.isEmpty) {
       await getBeerBrands();
     }
     RegExp pat = RegExp(pattern, caseSensitive: false, unicode: true);
