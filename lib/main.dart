@@ -11,7 +11,7 @@ void main() async {
   await EntryStorage.checkIfDbExists();
   await initializeDateFormatting(Platform.localeName);
   EntryStorage.openDb();
-  Settings.settings;
+  Settings.ensureInitialized();
   runApp(MyApp());
 }
 
