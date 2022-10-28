@@ -6,7 +6,7 @@ class WeekdaysNames {
   static List<String> _shortList = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
   static List<String> get long {
-    if (_longList == null) {
+    if (_longList.isEmpty) {
       _longList = DateFormat.EEEE(Platform.localeName).dateSymbols.WEEKDAYS.toList();
       _longList.add(_longList.removeAt(0));
     }
@@ -14,7 +14,7 @@ class WeekdaysNames {
   }
 
   static List<String> get short {
-    if (_shortList == null) {
+    if (_shortList.isEmpty) {
       _shortList = DateFormat.EEEE(Platform.localeName).dateSymbols.SHORTWEEKDAYS.toList();
       _shortList.add(_shortList.removeAt(0));
     }

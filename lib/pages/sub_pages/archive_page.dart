@@ -10,18 +10,16 @@ class ArchivePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var textChildren = <Widget>[];
-    if (topBeers != null) {
-      textChildren.add(Flexible(
-          child: FractionallySizedBox(
-        widthFactor: 0.9,
-        heightFactor: 1,
-        alignment: Alignment.topCenter,
-        child: ListView(
-          children: topBeers.value,
-          padding: EdgeInsets.only(left: 32),
-        ),
-      )));
-    }
+    textChildren.add(Flexible(
+        child: FractionallySizedBox(
+      widthFactor: 0.9,
+      heightFactor: 1,
+      alignment: Alignment.topCenter,
+      child: ListView(
+        children: topBeers.value,
+        padding: EdgeInsets.only(left: 32),
+      ),
+    )));
     return Container(
       alignment: Alignment.topCenter,
       padding: EdgeInsets.all(16),

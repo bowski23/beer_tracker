@@ -6,7 +6,6 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'models/beer_entry.dart';
-import 'models/standard_beer_entry.dart';
 
 class EntryStorage {
   static EntryStorage? _instance;

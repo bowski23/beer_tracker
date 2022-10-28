@@ -2,8 +2,6 @@ import 'package:beer_tracker/entry_storage.dart';
 import 'package:beer_tracker/models/beer_entry.dart';
 import 'package:beer_tracker/models/settings.dart';
 import 'package:beer_tracker/ui/beer_button.dart';
-import 'package:flutter/foundation.dart';
-import '../ui/beer_button.dart';
 import 'package:flutter/material.dart';
 import 'beer_add_page.dart';
 import 'package:intl/intl.dart';

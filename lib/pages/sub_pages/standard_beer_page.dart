@@ -1,7 +1,6 @@
 import 'package:beer_tracker/models/beer_consumptionForms.dart';
 import 'package:beer_tracker/models/beer_volumes.dart';
 import 'package:beer_tracker/models/standard_beer_entry.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../entry_storage.dart';

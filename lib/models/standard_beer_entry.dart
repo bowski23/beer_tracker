@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class StandardBeerEntry {
   final String brand;
   final double volume;

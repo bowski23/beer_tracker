@@ -87,7 +87,7 @@ class BeerBarRendererDecorator<D> extends charts.BarLabelDecorator<D> {
       final rect = elem.bounds;
       if (rect != null && elem.datum > 0) {
         final Point tl = Point(rect.left, rect.top - rect.width / 4);
-        final Point tr = Point(rect.right, rect.top - rect.width / 4);
+        // final Point tr = Point(rect.right, rect.top - rect.width / 4);
         final Point glasstl = Point(rect.left, drawBounds.top);
         final Point glasstr = Point(rect.right, drawBounds.top);
         canvas.drawRRect(Rectangle.fromPoints(tl, rect.topRight),
@@ -150,7 +150,6 @@ class GlassBottomDrawStrategy<D> extends com.BaseTickDrawStrategy<D> {
     required bool isLast,
     bool collision = false,
   }) {
-    Point<num> a, b, c, d;
     final tickLocationPx = tick.locationPx!;
     num width, height, x, y;
     switch (orientation) {
