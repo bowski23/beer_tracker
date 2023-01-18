@@ -5,6 +5,8 @@ class Settings {
   //all settings should be defined here
 
   static Setting<CounterMode> counterMode = Setting("counterMode", CounterMode.year, enumValues: CounterMode.values);
+  static Setting<bool> publishToDiscord = Setting("publishToDiscord", false);
+  static Setting<String> publishToDiscordName = Setting("publishToDiscordName", "Anonym");
 
   //below is the actual class definition
   static Settings? _instance;

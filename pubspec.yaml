@@ -37,6 +37,7 @@ dependencies:
       path: charts_flutter
   datetime_picker_formfield:
   shared_preferences:
+  http:
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:beer_tracker/helpers/webhook_helper.dart';
+import 'package:beer_tracker/models/settings.dart';
 import 'package:beer_tracker/models/standard_beer_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -49,6 +51,8 @@ class EntryStorage {
 
   Future<void> saveEntry(BeerEntry entry) async {
     final Database db = await database!;
+
+    if (Settings.publishToDiscord.value) publishToDiscord(entry);
 
     await db.insert('beerEntry', entry.toMap(), conflictAlgorithm: ConflictAlgorithm.fail);
   }
