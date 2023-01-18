@@ -161,7 +161,9 @@ class SettingWidget<T> extends StatelessWidget {
               ),
             ),
             Container(
-                constraints: const BoxConstraints(minWidth: 100), margin: const EdgeInsets.only(left: 10), child: child)
+                constraints: const BoxConstraints(minWidth: 100, maxWidth: 200),
+                margin: const EdgeInsets.only(left: 10),
+                child: child)
           ],
         ));
   }
@@ -229,6 +231,37 @@ class _DropDownSettingWidgetState<T> extends State<DropDownSettingWidget<T>> {
         items: widget.items,
         onChanged: valueChanged,
         value: widget.setting.value,
+      ),
+    );
+  }
+}
+
+class TextSettingWidget extends StatefulWidget {
+  final Setting<String> setting;
+  final String description;
+  final IconData? icon;
+  final VoidCallback? onChanged;
+
+  const TextSettingWidget(this.setting, {Key? key, this.description = '', this.icon, this.onChanged}) : super(key: key);
+
+  @override
+  State<TextSettingWidget> createState() => _TextSettingWidgetStatetate();
+}
+
+class _TextSettingWidgetStatetate extends State<TextSettingWidget> {
+  @override
+  Widget build(BuildContext context) {
+    String a = widget.setting.value;
+    return SettingWidget<String>(
+      widget.setting,
+      description: widget.description,
+      icon: widget.icon,
+      child: Container(
+        child: TextFormField(
+            initialValue: widget.setting.value,
+            onFieldSubmitted: (val) => setState(() {
+                  widget.setting.value = val;
+                })),
       ),
     );
   }
